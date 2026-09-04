@@ -3,11 +3,15 @@
 namespace OwlAdmin\Tenancy\Models;
 
 use Slowlyo\OwlAdmin\Admin;
-use Slowlyo\OwlAdmin\Models\BaseModel;
+use Illuminate\Database\Eloquent\Model;
+use Slowlyo\OwlAdmin\Traits\DatetimeFormatterTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class TenantUser extends BaseModel
+class TenantUser extends Model
 {
+    use UsesAdminConnection;
+    use DatetimeFormatterTrait;
+
     protected $table = 'admin_tenant_users';
 
     protected $guarded = [];

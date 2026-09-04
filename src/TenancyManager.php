@@ -330,28 +330,52 @@ class TenancyManager
 
     /**
      * 取出后台当前用户，未登录返回 null。
+     *
+     * Admin 未启动时（测试、命令行）不要抛错，依次退到 admin guard 和默认 guard。
      */
     public function user()
     {
-        if (class_exists(Admin::class)) {
-            return Admin::user();
+        try {
+            if (class_exists(Admin::class)) {
+                $user = Admin::user();
+                if ($user) {
+                    return $user;
+                }
+            }
+        } catch (\Throwable) {
+            // Admin 容器未就绪时 user() 会因缺少 guard / 模块而失败
         }
 
-        return Auth::guard('admin')->user();
+        try {
+            $user = Auth::guard('admin')->user();
+            if ($user) {
+                return $user;
+            }
+        } catch (\Throwable) {
+            // 宿主未配置 admin guard 时退回默认 guard
+        }
+
+        return Auth::user();
     }
 
     /**
-     * 扩展设置项。扩展未启用时退回默认值。
+     * 扩展设置项。Admin 未挂载时读 config，再退回默认值。
      */
     protected function setting(string $key, mixed $default = null): mixed
     {
-        if (!class_exists(TenancyServiceProvider::class)) {
-            return $default;
+        try {
+            // 未 bind 时不要 new Provider，否则每条业务查询都会去碰 Admin 容器
+            if (app()->bound(TenancyServiceProvider::class)) {
+                $value = TenancyServiceProvider::setting($key, $default);
+                if ($value !== null) {
+                    return $value;
+                }
+            }
+        } catch (\Throwable) {
+            // 扩展未注册进 Admin 时 instance()/setting() 会失败
         }
 
-        $value = TenancyServiceProvider::setting($key, $default);
-
-        return $value ?? $default;
+        return config('owl_admin_tenancy.' . $key, $default);
     }
 
     /**

@@ -3,15 +3,18 @@
 namespace OwlAdmin\Tenancy\Models;
 
 use Slowlyo\OwlAdmin\Admin;
-use Slowlyo\OwlAdmin\Models\BaseModel;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Slowlyo\OwlAdmin\Traits\DatetimeFormatterTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Tenant extends BaseModel
+class Tenant extends Model
 {
     use SoftDeletes;
+    use UsesAdminConnection;
+    use DatetimeFormatterTrait;
 
     protected $table = 'tenants';
 
@@ -58,7 +61,8 @@ class Tenant extends BaseModel
         parent::boot();
 
         static::deleting(function (Tenant $model) {
-            $model->users()->detach();
+            // 用中间表直接删，避免 Admin::adminUserModel() 在测试里不可用
+            $model->memberships()->delete();
         });
     }
 }
