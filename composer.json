@@ -1,0 +1,39 @@
+{
+    "name": "owl-admin/tenancy",
+    "alias": "多租户",
+    "description": "Owl Admin 多租户扩展：共享数据库 + tenant_id 作用域",
+    "type": "library",
+    "version": "1.0.0",
+    "keywords": [
+        "owl-admin",
+        "extension"
+    ],
+    "homepage": "https://github.com/owl-admin/tenancy",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "slowlyo",
+            "email": "slowlyo_email@qq.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "slowlyo/owl-admin": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "OwlAdmin\\Tenancy\\": "src/"
+        },
+        "files": [
+            "src/Support/helpers.php"
+        ]
+    },
+    "extra": {
+        "owl-admin": "OwlAdmin\\Tenancy\\TenancyServiceProvider",
+        "laravel": {
+            "providers": [
+                "OwlAdmin\\Tenancy\\TenancyServiceProvider"
+            ]
+        }
+    }
+}
