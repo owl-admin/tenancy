@@ -71,6 +71,13 @@ Article::forTenant($id)->get(); // 指定租户
 
 请求头可额外携带 `X-Tenant-Id`，仅作用于当前请求。
 
+## 测试
+
+```bash
+composer install
+composer test
+```
+
 ### 注意事项
 
 - 仅支持共享库 + 列隔离，不支持独立数据库 / 域名识别
