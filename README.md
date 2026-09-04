@@ -22,12 +22,11 @@ composer require owl-admin/tenancy
 
 然后在后台 **开发者工具 → 扩展管理** 启用 **多租户**（`owl-admin.tenancy`）。
 
-## 在 owl-admin-dev 中联调
+## 本地 path 安装（开发联调）
 
-把本仓库克隆（或加为 submodule）到基座的扩展目录：
+把本仓库放到 Laravel 项目的扩展目录（默认 `extensions/`，见 `config/admin.php`）：
 
 ```bash
-# 在 owl-admin-dev 根目录
 git clone https://github.com/owl-admin/tenancy.git extensions/owl-admin/tenancy
 # 或: git submodule add https://github.com/owl-admin/tenancy.git extensions/owl-admin/tenancy
 ```
@@ -43,8 +42,6 @@ git clone https://github.com/owl-admin/tenancy.git extensions/owl-admin/tenancy
 ```bash
 php artisan migrate --path=extensions/owl-admin/tenancy/database/migrations
 ```
-
-本地 PHP 若在 `php82` 容器里，工作目录用 `/www/sites/owl-admin/index/owl-admin-dev`。
 
 ## 扩展设置
 
